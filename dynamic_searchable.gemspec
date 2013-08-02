@@ -25,8 +25,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'bundler',          '>=1.0.0'
   s.add_development_dependency 'rspec',            '>=2.0.1'
   s.add_development_dependency 'sqlite3-ruby',     '>=1.3.2'
-  s.add_development_dependency 'activemodel',      '3.0.1'
-  s.add_development_dependency 'activerecord',     '3.0.1'
-  s.add_development_dependency 'activesupport',    '3.0.1'
-  s.add_development_dependency 'database_cleaner', '0.5.2'
+  s.add_development_dependency 'activerecord',     '~> 3.0'
+  s.add_development_dependency 'activesupport',    '~> 3.0'
+  s.add_development_dependency 'database_cleaner', '~> 1.0.0'
 end

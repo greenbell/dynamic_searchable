@@ -25,5 +25,10 @@ describe "The class (extend Dynamic Searchable)" do
       result = Article.search(:by_subject => "晴れ", :by_body => "となりの").first
       result.should eql @article
     end
+
+    it "should skip execution of methods other than scope" do
+      Article.search(:delete_all => [@article.id.to_s])
+      Article.count.should == 1
+    end
   end
 end
