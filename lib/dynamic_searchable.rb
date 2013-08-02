@@ -14,12 +14,16 @@ module DynamicSearchable
   def search(params = {})
     return self.scoped if params.nil?
     params.reject{|k,v|v.blank?}.to_a.inject(self.scoped) do |base,param|
-      base.send(param.first, param.last) if searchable_scopes.include?(param.first)
+      if searchable_scopes.include?(param.first.to_sym)
+        base.send(param.first, param.last)
+      else
+        base
+      end
     end
   end
 
   def scope_with_dynamic_searchable(name, options={}, &block)
-    self.searchable_scopes.push name
+    self.searchable_scopes.push name.to_sym
     scope_without_dynamic_searchable name, options, &block
   end
 end
