@@ -13,7 +13,6 @@ Gem::Specification.new do |s|
   s.files                     = [
     ".gitignore",
     "Gemfile",
-    "Gemfile.lock",
     "MIT-LICENSE",
     "README",
     "Rakefile",
