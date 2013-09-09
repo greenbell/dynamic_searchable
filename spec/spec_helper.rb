@@ -29,6 +29,7 @@ RSpec.configure do |config|
     DatabaseCleaner.start
 
     class ::Article < ActiveRecord::Base
+      scope :by_id, lambda{ |num| where(:id => num) }
       extend DynamicSearchable
 
       scope :by_subject, lambda { |str| where("subject like ?", "%#{str}%") }

@@ -1,42 +1,52 @@
 # coding: utf-8
 require File.expand_path('../spec_helper', __FILE__)
 
-describe "The class (extend Dynamic Searchable)" do
-  describe "scope" do
+describe DynamicSearchable do
+  describe "scopes" do
     subject { Article }
-    it { should be_respond_to :by_subject }
-    it { should be_respond_to :by_body }
+    it { should respond_to :by_subject }
+    it { should respond_to :by_body }
   end
 
-  describe "search method" do
+  describe ".searchable_scopes" do
+    it "lists up all scope names" do
+      expect(Article.searchable_scopes).to eq [:by_id, :by_subject, :by_body]
+    end
+  end
+
+  describe ".search" do
     let!(:articles) do
       [Article.create(:subject => "晴れ時々赤塚", :body => "となりの酒井くん"),
        Article.create(:subject => "だみー", :body => "ダミー")]
     end
 
-    it "should respond to search method" do
-      Article.should be_respond_to :search
+    it "responds to :search" do
+      expect(Article).to respond_to :search
     end
 
-    it "should be searchable using single scope" do
-      Article.search(:by_subject => "晴れ").all.should == [articles[0]]
+    it "is searchable using single scope" do
+      expect(Article.search(:by_subject => "晴れ").all).to eq [articles[0]]
     end
 
-    it "should be searchable using multiple scopes" do
-      Article.search(:by_subject => "晴れ", :by_body => "となりの").all.should == [articles[0]]
+    it "is searchable using multiple scopes" do
+      expect(Article.search(:by_subject => "晴れ", :by_body => "となりの").all).to eq [articles[0]]
     end
 
-    it "should be searchable using string-keyed hash" do
-      Article.search('by_subject' => "晴れ").all.should == [articles[0]]
+    it "is searchable using string-keyed hash" do
+      expect(Article.search('by_subject' => "晴れ").all).to eq [articles[0]]
     end
 
-    it "should ignore non-existent scope name" do
-     Article.search('freeeword' => "晴れ").all.should =~ articles
+    it "ignores non-existent scope name" do
+     expect(Article.search('freeeword' => "晴れ").all).to match_array articles
     end
 
-    it "should skip execution of methods other than scope" do
+    it "skips execution of methods other than scope" do
       Article.search(:delete_all => [articles[0].id.to_s])
-      Article.count.should == 2
+      expect(Article.count).to eq 2
+    end
+
+    it "allows search of the scope that is decleared before 'extend DynamicSearchable'" do
+      expect(Article.search(:by_id => [articles[0].id]).all).to eq articles.first(1)
     end
   end
 end

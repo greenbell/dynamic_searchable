@@ -2,7 +2,7 @@ require 'rubygems'
 require 'bundler'
 require 'rake'
 require 'rake/testtask'
-require 'rake/rdoctask'
+require 'rdoc/task'
 
 Bundler.setup
 Bundler.require
@@ -11,7 +11,7 @@ desc 'Default: run unit tests.'
 task :default => :spec
 
 require 'rspec/core/rake_task'
-RSpec::Core::Rake.Task.new(:spec)
+RSpec::Core::RakeTask.new(:spec)
 
 desc 'Generate documentation for the dynamic_searchable plugin.'
 Rake::RDocTask.new(:rdoc) do |rdoc|

@@ -1,16 +1,7 @@
 # coding: utf-8
+require 'active_support'
 
 module DynamicSearchable
-  def self.extended(base)
-    base.instance_eval do
-      class_attribute :searchable_scopes
-      self.searchable_scopes ||= []
-      class << self
-        alias_method_chain :scope, :dynamic_searchable
-      end
-    end
-  end
-
   def search(params = {})
     return self.scoped if params.nil?
     params.reject{|k,v|v.blank?}.to_a.inject(self.scoped) do |base,param|
@@ -22,8 +13,9 @@ module DynamicSearchable
     end
   end
 
-  def scope_with_dynamic_searchable(name, options={}, &block)
-    self.searchable_scopes.push name.to_sym
-    scope_without_dynamic_searchable name, options, &block
-  end
+  autoload :ActiveRecord, 'dynamic_searchable/active_record'
+end
+
+ActiveSupport.on_load(:active_record) do
+  ActiveRecord::Base.class_eval { include DynamicSearchable::ActiveRecord }
 end
