@@ -3,8 +3,9 @@ require 'active_support'
 
 module DynamicSearchable
   def search(params = {})
-    return self.scoped if params.nil?
-    params.reject{|k,v|v.blank?}.to_a.inject(self.scoped) do |base,param|
+    relation = respond_to?(:scoped) ? scoped : all
+    return relation if params.nil?
+    params.reject{|k,v|v.blank?}.to_a.inject(relation) do |base,param|
       if searchable_scopes.include?(param.first.to_sym)
         base.send(param.first, param.last)
       else
